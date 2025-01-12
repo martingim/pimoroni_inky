@@ -8,7 +8,7 @@ def inky_txt(msg, display, font):
         img.paste(display.BLACK, (0,0,img.size[0],img.size[1]))
         draw = ImageDraw.Draw(img)
 
-        w, h = font.getsize(msg)
+        tmp, tmp, w, h = font.getbbox(msg)
         x = (display.WIDTH / 2) - (w/2)
         y = (display.HEIGHT/2)  - (h/2)
         draw.text((x,y), msg, display.WHITE, font)
@@ -31,10 +31,12 @@ except NotImplementedError:
 font = font_manager.FontProperties(fname="~/usr/share/fonts/truetype/dseg/DSEG7Classic-Bold.ttf")
 file = font_manager.findfont(font)
 font = ImageFont.truetype(file, 40)
-
+old_msg = ''
 while True:
-    msg = strftime("%H:%M", localtime())
-    inky_txt(msg, inky_display, font)
+    new_msg = strftime("%H:%M", localtime())
+    if new_msg!=old_msg:
+        inky_txt(new_msg, inky_display, font)
     sleep(10)
+    old_msg=new_msg
 
 

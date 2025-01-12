@@ -49,9 +49,9 @@ def run_timer():
                 display = InkyWHAT("black")
                 display.set_border(display.BLACK)
 
-                font = font_manager.FontProperties(fname="/home/pi/.fonts/digital7.ttf")
+                font = font_manager.FontProperties(fname="~/usr/share/fonts/truetype/dseg/DSEG7Classic-Bold.ttf")
                 file = font_manager.findfont(font)
-                font = ImageFont.truetype(file, 195)
+                font = ImageFont.truetype(file, 110)
 
                 endtime = time() + work_time
                 remaining_time = work_time

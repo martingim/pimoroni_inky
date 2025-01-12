@@ -18,7 +18,7 @@ font = font_manager.FontProperties(fname="~/usr/share/fonts/truetype/dseg/DSEG7C
 file = font_manager.findfont(font)
 font = ImageFont.truetype(file, 40)
 
-while true:
+while True:
     msg = strftime("%H:%M", localtime())
     inky_txt(msg, inky_display, font)
     sleep(10)

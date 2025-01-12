@@ -3,6 +3,20 @@ from inky.auto import auto
 from PIL import Image, ImageFont, ImageDraw
 from matplotlib import font_manager
 
+def inky_txt(msg, display, font):
+        img = Image.new("P", (display.WIDTH, display.HEIGHT),100)
+        img.paste(display.BLACK, (0,0,img.size[0],img.size[1]))
+        draw = ImageDraw.Draw(img)
+
+        w, h = font.getsize(msg)
+        x = (display.WIDTH / 2) - (w/2)
+        y = (display.HEIGHT/2)  - (h/2)
+        draw.text((x,y), msg, display.WHITE, font)
+        display.set_image(img)
+        display.show()
+        print(msg)
+
+
 # Set up the Inky display
 try:
     inky_display = auto(ask_user=True, verbose=True)
@@ -24,15 +38,3 @@ while True:
     sleep(10)
 
 
-def inky_txt(msg, display, font):
-        img = Image.new("P", (display.WIDTH, display.HEIGHT),100)
-        img.paste(display.BLACK, (0,0,img.size[0],img.size[1]))
-        draw = ImageDraw.Draw(img)
-
-        w, h = font.getsize(msg)
-        x = (display.WIDTH / 2) - (w/2)
-        y = (display.HEIGHT/2)  - (h/2)
-        draw.text((x,y), msg, display.WHITE, font)
-        display.set_image(img)
-        display.show()
-        print(msg)

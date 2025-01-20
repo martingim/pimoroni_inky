@@ -86,11 +86,13 @@ while True:
     if utc.localize(home_forecast.data.expires)<datetime.now(timezone.utc):
         print("expired, updating forecast")
         home_forecast.update()
-        interval = home_forecast.data.intervals[0]
-        variables = interval.variables
-        t = variables["air_temperature"].value
-    currtime = strftime("%H:%M", localtime())
+    
+    interval = home_forecast.data.intervals[0]
+    variables = interval.variables
+    t = variables["air_temperature"].value
     temperature = f"{round(t)}\u00b0"
+
+    currtime = strftime("%H:%M", localtime())
     if currtime!=old_time:
         inky_txt(currtime,temperature, str(icon), inky_display, SEG_font, ICONS_font, temp_font)
     sleep(10)

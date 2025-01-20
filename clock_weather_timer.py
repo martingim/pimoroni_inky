@@ -4,6 +4,9 @@ from time import sleep, localtime, strftime
 from inky.auto import auto, InkyWHAT
 from PIL import Image, ImageFont, ImageDraw
 from matplotlib import font_manager
+import pytz
+utc=pytz.UTC
+
 what_font_size = 110
 phat_font_size = 40
 
@@ -72,13 +75,11 @@ except:
     home_forecast.update()
 
 
-
-
 icon = 0
 old_time = ''
 temperature = '-10.0'
 while True:
-    if home_forecast.data.expires<datetime.now(timezone.utc):
+    if utc.localize(home_forecast.data.expires)<datetime.now(timezone.utc):
         print("expired, updating forecast")
         home_forecast.update()
     currtime = strftime("%H:%M", localtime())
@@ -87,3 +88,4 @@ while True:
     sleep(10)
     old_time=currtime
     icon += 1
+    print(home_forecast)

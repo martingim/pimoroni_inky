@@ -78,7 +78,7 @@ def utc_to_local(utc_dt):
 
 home = Place("Heggedal", 59.78, 10.44, 112)
 ua = "rpi_inky_weather_app https://github.com/martingim/pimoroni_inky"
-home_forecast = Forecast(home, ua, forecast_type="complete")
+home_forecast = Forecast(home, ua, forecast_type="compact")
 
 try:
     home_forecast.load()
@@ -109,5 +109,3 @@ while True:
         inky_txt(currtime,temperature, icon, inky_display, SEG_font, ICONS_font, temp_font)
     sleep(10)
     old_time=currtime
-    icon += 1
-    print(home_forecast)

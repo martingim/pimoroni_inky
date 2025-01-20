@@ -59,13 +59,13 @@ def inky_txt(currtime, temperature, icon, display):
         
         #set the weather icon
         tmp, tmp, w, h = icon_font.getbbox(icon)
-        x = 0 + 10
+        x = display.WIDTH - (w+15)
         y = display.HEIGHT -(h+6)
         draw.text((x,y), icon, display.WHITE, icon_font)
 
         #Print the temperature
         tmp, tmp, w, h = temp_font.getbbox(temperature)
-        x = 0
+        x = 0 + 10
         y = display.HEIGHT-(h+6)
         draw.text((x,y), temperature, display.WHITE, temp_font)
         display.set_image(img)

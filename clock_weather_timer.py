@@ -5,6 +5,7 @@ from inky.auto import auto, InkyWHAT
 from PIL import Image, ImageFont, ImageDraw
 from matplotlib import font_manager
 import pytz
+import json
 utc=pytz.UTC
 
 what_font_size = 110
@@ -35,10 +36,15 @@ SEG_file = font_manager.findfont(font)
 
 weather_icons = font_manager.FontProperties(fname="~/usr/share/fonts/truetype/dseg/DSEGWeather.ttf")
 icons_file = font_manager.findfont(weather_icons)
+icon_dict = {'clearsky':'1', 'cloudy':'2', 'fair':'9', 'fog':'2', 'heavyrain':'4','heavyrainandthunder':'7', 
+             'heavyrainshowers':'4', 'heavysleet':'5','heavysleetandthunder':'0', 'heavysleetshowers':'0',
+             'heavysnow':'5', 'heavysnowshowers':'5', 'lightrain':'3', 'lightrainandthunder':'6',
+             'lightrainshowers':'3', 'lightsleet':'5', 'lightsnow':'5', 'partlycloudy':'9', 'rain':'3',
+             'rainandthunder':'6', 'rainshowers':'3', 'sleet':'5', 'snow':'5', 'snowshowers':'5'}
 
 ICONS_font = ImageFont.truetype(icons_file, int(fontsize*0.75))
 SEG_font = ImageFont.truetype(SEG_file, fontsize)
-temp_font = ImageFont.truetype(SEG_file, int(fontsize*0.25))
+temp_font = ImageFont.truetype(SEG_file, int(fontsize*0.5))
 
 def inky_txt(currtime, temperature, icon, display, text_font, icon_font, temp_font):
         img = Image.new("P", (display.WIDTH, display.HEIGHT),100)
@@ -58,8 +64,9 @@ def inky_txt(currtime, temperature, icon, display, text_font, icon_font, temp_fo
         draw.text((x,y), icon, display.WHITE, icon_font)
 
         #Print the temperature
-        x = 15
-        y = display.HEIGHT
+        tmp, tmp, w, h = temp_font.getbbox(temperature)
+        x = display.WIDTH/6-(w+15)
+        y = display.HEIGHT-(h+6)
         draw.text((x,y), temperature, display.WHITE, temp_font)
         display.set_image(img)
         display.show()
@@ -90,11 +97,16 @@ while True:
     interval = home_forecast.data.intervals[0]
     variables = interval.variables
     t = variables["air_temperature"].value
-    temperature = f"{round(t)}\u00b0"
-
+    temperature = f"{t}\u00b0"
+    data = json.loads(home_forecast.json_string)
+    symbol_code = data['data']['properties']['timeseries'][0]['data']['next_6_hours']['summary']['symbol_code']
+    try:
+        icon = icon_dict[symbol_code]
+    except:
+        icon = ':'        
     currtime = strftime("%H:%M", localtime())
     if currtime!=old_time:
-        inky_txt(currtime,temperature, str(icon), inky_display, SEG_font, ICONS_font, temp_font)
+        inky_txt(currtime,temperature, icon, inky_display, SEG_font, ICONS_font, temp_font)
     sleep(10)
     old_time=currtime
     icon += 1

@@ -38,9 +38,9 @@ icons_file = font_manager.findfont(weather_icons)
 
 ICONS_font = ImageFont.truetype(icons_file, int(fontsize*0.75))
 SEG_font = ImageFont.truetype(SEG_file, fontsize)
+temp_font = ImageFont.truetype(SEG_file, int(fontsize*0.25))
 
-
-def inky_txt(currtime, temperature, icon, display, text_font, icon_font):
+def inky_txt(currtime, temperature, icon, display, text_font, icon_font, temp_font):
         img = Image.new("P", (display.WIDTH, display.HEIGHT),100)
         img.paste(display.BLACK, (0,0,img.size[0],img.size[1]))
         draw = ImageDraw.Draw(img)
@@ -57,6 +57,10 @@ def inky_txt(currtime, temperature, icon, display, text_font, icon_font):
         y = display.HEIGHT -(h+6)
         draw.text((x,y), icon, display.WHITE, icon_font)
 
+        #Print the temperature
+        x = 15
+        y = display.HEIGHT
+        draw.text((x,y), temperature, display.WHITE, temp_font)
         display.set_image(img)
         display.show()
         print(currtime)
@@ -77,14 +81,18 @@ except:
 
 icon = 0
 old_time = ''
-temperature = '-10.0'
+temperature = ''
 while True:
     if utc.localize(home_forecast.data.expires)<datetime.now(timezone.utc):
         print("expired, updating forecast")
         home_forecast.update()
+        interval = home_forecast.data.intervals[0]
+        variables = interval.variables
+        t = variables["air_temperature"].value
     currtime = strftime("%H:%M", localtime())
+    temperature = f"{round(t)}\u00b0"
     if currtime!=old_time:
-        inky_txt(currtime,temperature, str(icon), inky_display, SEG_font, ICONS_font)
+        inky_txt(currtime,temperature, str(icon), inky_display, SEG_font, ICONS_font, temp_font)
     sleep(10)
     old_time=currtime
     icon += 1

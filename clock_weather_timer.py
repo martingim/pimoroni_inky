@@ -1,3 +1,5 @@
+from metno_locationforecast import Forecast, Place
+from datetime import datetime, timezone
 from time import sleep, localtime, strftime
 from inky.auto import auto, InkyWHAT
 from PIL import Image, ImageFont, ImageDraw
@@ -31,7 +33,7 @@ SEG_file = font_manager.findfont(font)
 weather_icons = font_manager.FontProperties(fname="~/usr/share/fonts/truetype/dseg/DSEGWeather.ttf")
 icons_file = font_manager.findfont(weather_icons)
 
-ICONS_font = ImageFont.truetype(icons_file, fontsize)
+ICONS_font = ImageFont.truetype(icons_file, int(fontsize*0.75))
 SEG_font = ImageFont.truetype(SEG_file, fontsize)
 
 
@@ -48,18 +50,37 @@ def inky_txt(currtime, temperature, icon, display, text_font, icon_font):
         
         #set the weather icon
         tmp, tmp, w, h = icon_font.getbbox(icon)
-        x = display.WIDTH - w
-        y = display.HEIGHT -h
+        x = display.WIDTH - (w+15)
+        y = display.HEIGHT -(h+6)
         draw.text((x,y), icon, display.WHITE, icon_font)
 
         display.set_image(img)
         display.show()
         print(currtime)
 
+## WEATHER ##
+def utc_to_local(utc_dt):
+    return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
+
+home = Place("Heggedal", 59.78, 10.44, 112)
+ua = "rpi_inky_weather_app https://github.com/martingim/pimoroni_inky"
+home_forecast = Forecast(home, ua, forecast_type="complete")
+
+try:
+    home_forecast.load()
+except:
+    home_forecast.update()
+
+
+
+
 icon = 0
 old_time = ''
 temperature = '-10.0'
 while True:
+    if home_forecast.data.expires<datetime.now(timezone.utc):
+        print("expired, updating forecast")
+        home_forecast.update()
     currtime = strftime("%H:%M", localtime())
     if currtime!=old_time:
         inky_txt(currtime,temperature, str(icon), inky_display, SEG_font, ICONS_font)

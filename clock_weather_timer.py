@@ -42,11 +42,11 @@ icon_dict = {'clearsky':'1', 'cloudy':'2', 'fair':'9', 'fog':'2', 'heavyrain':'4
              'lightrainshowers':'3', 'lightsleet':'5', 'lightsnow':'5', 'partlycloudy':'9', 'rain':'3',
              'rainandthunder':'6', 'rainshowers':'3', 'sleet':'5', 'snow':'5', 'snowshowers':'5'}
 
-ICONS_font = ImageFont.truetype(icons_file, int(fontsize*0.75))
-SEG_font = ImageFont.truetype(SEG_file, fontsize)
+icon_font = ImageFont.truetype(icons_file, int(fontsize*0.75))
+text_font = ImageFont.truetype(SEG_file, fontsize)
 temp_font = ImageFont.truetype(SEG_file, int(fontsize*0.5))
 
-def inky_txt(currtime, temperature, icon, display, text_font, icon_font, temp_font):
+def inky_txt(currtime, temperature, icon, display):
         img = Image.new("P", (display.WIDTH, display.HEIGHT),100)
         img.paste(display.BLACK, (0,0,img.size[0],img.size[1]))
         draw = ImageDraw.Draw(img)
@@ -59,13 +59,13 @@ def inky_txt(currtime, temperature, icon, display, text_font, icon_font, temp_fo
         
         #set the weather icon
         tmp, tmp, w, h = icon_font.getbbox(icon)
-        x = display.WIDTH - (w+15)
+        x = 0 + 10
         y = display.HEIGHT -(h+6)
         draw.text((x,y), icon, display.WHITE, icon_font)
 
         #Print the temperature
         tmp, tmp, w, h = temp_font.getbbox(temperature)
-        x = display.WIDTH/6-(w+15)
+        x = 0
         y = display.HEIGHT-(h+6)
         draw.text((x,y), temperature, display.WHITE, temp_font)
         display.set_image(img)
@@ -106,6 +106,6 @@ while True:
         icon = ':'        
     currtime = strftime("%H:%M", localtime())
     if currtime!=old_time:
-        inky_txt(currtime,temperature, icon, inky_display, SEG_font, ICONS_font, temp_font)
+        inky_txt(currtime,temperature, icon, inky_display)
     sleep(10)
     old_time=currtime

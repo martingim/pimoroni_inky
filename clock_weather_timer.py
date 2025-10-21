@@ -280,8 +280,8 @@ def sub_10_min():
         global remaining_time
         global endtime
         work_time -= min(10*60, remaining_time)
+        endtime -= min(10*60, remaining_time)    
         remaining_time -= min(10*60, remaining_time)
-        endtime -= min(10*60, remaining_time)
         print("sub 10 min")
 
 def wait_for_input():

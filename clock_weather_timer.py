@@ -74,7 +74,7 @@ def inky_txt(currtime, temperature, p_min, p_max, icon, display):
         tmp, tmp, w, h = p_font.getbbox(precipitation)
         y = display.HEIGHT-(h+6)
         x = 180    
-        draw.text((x,y), , display.WHITE, p_font)
+        draw.text((x,y), precipitation, display.WHITE, p_font)
         
         
         display.set_image(img)

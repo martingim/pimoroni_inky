@@ -46,8 +46,9 @@ icon_font = ImageFont.truetype(icons_file, int(fontsize*0.75))
 text_font = ImageFont.truetype(SEG_file, fontsize)
 temp_font = ImageFont.truetype(SEG_file, int(fontsize*0.5))
 p_font = ImageFont.truetype(SEG_file, int(fontsize*0.25))
+uv_font = ImageFont.truetype(icons_file, int(fontsize*0.5))
 
-def inky_txt(currtime, temperature, p_min, p_max, icon, display):
+def inky_txt(currtime, temperature, p_min, p_max, icon, uv_symbol, display):
         img = Image.new("P", (display.WIDTH, display.HEIGHT),100)
         img.paste(display.BLACK, (0,0,img.size[0],img.size[1]))
         draw = ImageDraw.Draw(img)
@@ -76,6 +77,10 @@ def inky_txt(currtime, temperature, p_min, p_max, icon, display):
         x = 180    
         draw.text((x,y), precipitation, display.WHITE, p_font)
         
+        tmp, tmp, w, h = uv_font.getbbox(uv_symbol)
+        y = 6
+        x = 150
+        draw.text((x,y), uv_symbol, display.WHITE, uv_font)
         
         display.set_image(img)
         display.show()
@@ -110,22 +115,28 @@ while True:
     data = json.loads(home_forecast.json_string)
     symbol_code = data['data']['properties']['timeseries'][0]['data']['next_6_hours']['summary']['symbol_code']
 
-    #precipitation next 6 hours
+    #precipitation and uv next 6 hours
     now = datetime.today()
     now_plus_6_hours = now + timedelta(hours=6)
     precipitation_min = 0
     precipitation_max = 0
+    max_uv = 0
     for interval in home_forecast.data.intervals_between(now, now_plus_6_hours):
         precipitation_min += interval.variables["precipitation_amount_min"].value
         precipitation_max += interval.variables["precipitation_amount_max"].value
+        uv_max = max(uv_max, interval.variables["ultraviolet_index_clear_sky"].value)    
 
-    
+    if uv_max > 2.9:
+        uv_symbol = '1'
+    else:
+        uv_symbol = ':'
+        
     try:
         icon = icon_dict[symbol_code]
     except:
         icon = ':'        
     currtime = strftime("%H:%M", localtime())
     if currtime!=old_time:
-        inky_txt(currtime,temperature, precipitation_min, precipitation_max, icon, inky_display)
+        inky_txt(currtime,temperature, precipitation_min, precipitation_max, icon, uv_symbol, inky_display)
     sleep(10)
     old_time=currtime

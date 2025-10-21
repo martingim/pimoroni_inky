@@ -209,7 +209,7 @@ def run_timer():
                 endtime = time() + work_time
                 remaining_time = work_time
                 message = strftime("%H:%M", gmtime(remaining_time))
-                while remaining_time>10:
+                while remaining_time>59:
                         txtwhat(message, display, font)
                         #Check if it is time to update the display
                         remaining_time = endtime - time()
@@ -235,11 +235,13 @@ def run_timer():
                         message = newtime
                         remaining_time = endtime - time()
                 ylwtxtwhat(strftime("%H:%M", gmtime(0)), font)
-                while remaining_time <= 10:
+                while remaining_time <= 59:
                         old_time = ''
                         while Paused:
                             old_time = weather_report(old_time)
                             sleep(1)
+                        if !Paused:
+                            break
                         
                                     
                     

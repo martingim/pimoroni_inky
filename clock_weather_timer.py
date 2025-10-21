@@ -218,11 +218,9 @@ def run_timer():
                                     while Paused:
                                         weather_report()
                                         sleep(1)
-                                        #if time is added while paused
-                                        if message != strftime("%H:%M", gmtime(remaining_time)):
-                                            newtime = strftime("%H:%M", gmtime(remaining_time))
-                                            break
+                                        
                                     endtime = remaining_time + time()
+                                    txtwhat(message, display, font)
                         #update the message
                         message = newtime
                         remaining_time = endtime - time()

@@ -120,7 +120,7 @@ while True:
     now_plus_6_hours = now + timedelta(hours=6)
     precipitation_min = 0
     precipitation_max = 0
-    max_uv = 0
+    uv_max = 0
     for interval in home_forecast.data.intervals_between(now, now_plus_6_hours):
         precipitation_min += interval.variables["precipitation_amount_min"].value
         precipitation_max += interval.variables["precipitation_amount_max"].value

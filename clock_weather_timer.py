@@ -209,7 +209,7 @@ def run_timer():
 
                 endtime = time() + work_time
                 remaining_time = work_time
-                while remaining_time>0:
+                while True:
                         txtwhat(message, display, font)
                         #Check if it is time to update the display
                         remaining_time = endtime - time()
@@ -234,14 +234,14 @@ def run_timer():
                         #update the message
                         message = newtime
                         remaining_time = endtime - time()
-                message = strftime("%H:%M", gmtime(0))
-                #ylwtxtwhat(message, font)
-                Running = False
-                with open('times_worked.txt', 'a') as f:
-                        f.write(strftime("%d.%m.%y: ", localtime()) + str(work_time) + "\n")
-                work_time = 0
-                while work_time == 0:
-                        sleep(10)
+                # message = strftime("%H:%M", gmtime(0))
+                # #ylwtxtwhat(message, font)
+                # Running = False
+                # with open('times_worked.txt', 'a') as f:
+                #         f.write(strftime("%d.%m.%y: ", localtime()) + str(work_time) + "\n")
+                # work_time = 0
+                # while work_time == 0:
+                #         sleep(10)
 
 
 def Pause():

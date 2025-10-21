@@ -1,5 +1,5 @@
 from metno_locationforecast import Forecast, Place
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from time import sleep, localtime, strftime
 from inky.auto import auto, InkyWHAT
 from PIL import Image, ImageFont, ImageDraw
@@ -45,8 +45,9 @@ icon_dict = {'clearsky':'1', 'cloudy':'2', 'fair':'9', 'fog':'2', 'heavyrain':'4
 icon_font = ImageFont.truetype(icons_file, int(fontsize*0.75))
 text_font = ImageFont.truetype(SEG_file, fontsize)
 temp_font = ImageFont.truetype(SEG_file, int(fontsize*0.5))
+p_font = ImageFont.truetype(SEG_file, int(fontsize*0.25))
 
-def inky_txt(currtime, temperature, icon, display):
+def inky_txt(currtime, temperature, p_min, p_max, icon, display):
         img = Image.new("P", (display.WIDTH, display.HEIGHT),100)
         img.paste(display.BLACK, (0,0,img.size[0],img.size[1]))
         draw = ImageDraw.Draw(img)
@@ -68,6 +69,10 @@ def inky_txt(currtime, temperature, icon, display):
         x = 0 + 10
         y = display.HEIGHT-(h+6)
         draw.text((x,y), temperature, display.WHITE, temp_font)
+        x = 200
+        draw.text((x,y), f"{p_min}-{m_max}", display.WHITE, p_font)
+        
+        
         display.set_image(img)
         display.show()
         print(currtime)
@@ -78,7 +83,7 @@ def utc_to_local(utc_dt):
 
 home = Place("Heggedal", 59.78, 10.44, 112)
 ua = "rpi_inky_weather_app https://github.com/martingim/pimoroni_inky"
-home_forecast = Forecast(home, ua, forecast_type="compact")
+home_forecast = Forecast(home, ua, forecast_type="complete")
 
 try:
     home_forecast.load()
@@ -100,12 +105,23 @@ while True:
     temperature = f"{t}\u00b0"
     data = json.loads(home_forecast.json_string)
     symbol_code = data['data']['properties']['timeseries'][0]['data']['next_6_hours']['summary']['symbol_code']
+
+    #precipitation next 6 hours
+    now = datetime.today()
+    now_plus_6_hours = now + timedelta(hours=6)
+    precipitation_min = 0
+    precipitation_max = 0
+    for interval in home_forecast.data.intervals_between(now, now_plus_6_hours):
+        precipitation_min += interval.variables["precipitation_amount_min"].value
+        precipitation_max += interval.variables["precipitation_amount_max"].value
+
+    
     try:
         icon = icon_dict[symbol_code]
     except:
         icon = ':'        
     currtime = strftime("%H:%M", localtime())
     if currtime!=old_time:
-        inky_txt(currtime,temperature, icon, inky_display)
+        inky_txt(currtime,temperature, precipitation_min, precipitation_max, icon, inky_display)
     sleep(10)
     old_time=currtime

@@ -79,7 +79,7 @@ def inky_txt(currtime, temperature, p_min, p_max, icon, uv_symbol, display):
         
         tmp, tmp, w, h = uv_font.getbbox(uv_symbol)
         y = 6
-        x = 150
+        x = 350
         draw.text((x,y), uv_symbol, display.WHITE, uv_font)
         
         display.set_image(img)

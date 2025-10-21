@@ -51,7 +51,7 @@ text_font = ImageFont.truetype(SEG_file, fontsize)
 temp_font = ImageFont.truetype(SEG_file, int(fontsize*0.5))
 p_font = ImageFont.truetype(SEG_file, int(fontsize*0.25))
 uv_font = ImageFont.truetype(icons_file, int(fontsize*0.5))
-
+rem_time_font = ImageFont.truetype(SEG_file, int(fontsize*0.25))
 #weather text
 def inky_txt(currtime, temperature, precipitation, icon, uv_symbol, display):
         img = Image.new("P", (display.WIDTH, display.HEIGHT),100)
@@ -75,16 +75,26 @@ def inky_txt(currtime, temperature, precipitation, icon, uv_symbol, display):
         x = 0 + 10
         y = display.HEIGHT-(h+6)
         draw.text((x,y), temperature, display.WHITE, temp_font)
-        
+
+        #precipitation
         tmp, tmp, w, h = p_font.getbbox(precipitation)
         y = display.HEIGHT-(h+6)
         x = 160    
         draw.text((x,y), precipitation, display.WHITE, p_font)
-        
+
+        #UV
         tmp, tmp, w, h = uv_font.getbbox(uv_symbol)
         y = 6
         x = 350
         draw.text((x,y), uv_symbol, display.WHITE, uv_font)
+
+        if remaining_time>0:
+            msg = strftime("%H:%M", gmtime(remaining_time))
+            tmp, tmp, w, h = rem_time_font.getbbox(msg)
+            y = 6
+            x = 6
+            draw.text((x,y), msg, display.WHITE, rem_time_font)
+            
         
         display.set_image(img)
         display.show()

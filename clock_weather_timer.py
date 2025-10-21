@@ -227,7 +227,7 @@ def run_timer():
                         message = newtime
                         remaining_time = endtime - time()
                 message = strftime("%H:%M", gmtime(0))
-                ylwtxtwhat(message, font)
+                #ylwtxtwhat(message, font)
                 Running = False
                 with open('times_worked.txt', 'a') as f:
                         f.write(strftime("%d.%m.%y: ", localtime()) + str(work_time) + "\n")

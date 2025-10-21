@@ -198,18 +198,23 @@ def run_timer():
         global endtime
         global Running
         global Paused
+        display = InkyWHAT("black")
+        display.set_border(display.BLACK)
+
+        font = font_manager.FontProperties(fname="~/usr/share/fonts/truetype/dseg/DSEG7Classic-Bold.ttf")
+        file = font_manager.findfont(font)
+        font = ImageFont.truetype(file, 110)
+        endtime = time() + work_time
+        remaining_time = work_time
         while True:
-                display = InkyWHAT("black")
-                display.set_border(display.BLACK)
-
-                font = font_manager.FontProperties(fname="~/usr/share/fonts/truetype/dseg/DSEG7Classic-Bold.ttf")
-                file = font_manager.findfont(font)
-                font = ImageFont.truetype(file, 110)
-
-                endtime = time() + work_time
-                remaining_time = work_time
+                old_time = ''
+                while Paused:
+                    old_time = weather_report(old_time)
+                    sleep(1)
+                
                 message = strftime("%H:%M", gmtime(remaining_time))
-                while remaining_time>59:
+                while not Paused:
+                    if remaining_time>59:
                         txtwhat(message, display, font)
                         #Check if it is time to update the display
                         remaining_time = endtime - time()
@@ -222,26 +227,15 @@ def run_timer():
                                 #check if remaining time has changed while running
                                 if message != strftime("%H:%M", gmtime(remaining_time)):
                                         newtime = strftime("%H:%M", gmtime(remaining_time))
+                                        remaining_time = endtime - time()
                                         break
-                                if Paused:
-                                    old_time = ''
-                                    while Paused:
-                                        old_time = weather_report(old_time)
-                                        sleep(1)
-                                        
-                                    endtime = remaining_time + time()
-                                    txtwhat(message, display, font)
                         #update the message
                         message = newtime
                         remaining_time = endtime - time()
-                ylwtxtwhat(strftime("%H:%M", gmtime(0)), font)
-                while remaining_time <= 59:
-                        old_time = ''
-                        while Paused:
-                            old_time = weather_report(old_time)
+                    else:
+                        ylwtxtwhat(strftime("%H:%M", gmtime(0)), font)
+                        while not Paused:
                             sleep(1)
-                        if !Paused:
-                            break
                         
                                     
                     

@@ -199,7 +199,6 @@ def run_timer():
         global Running
         global Paused
         while True:
-                message = strftime("%H:%M", gmtime(work_time))
                 display = InkyWHAT("black")
                 display.set_border(display.BLACK)
 
@@ -209,6 +208,7 @@ def run_timer():
 
                 endtime = time() + work_time
                 remaining_time = work_time
+                message = strftime("%H:%M", gmtime(remaining_time))
                 while remaining_time>10:
                         txtwhat(message, display, font)
                         #Check if it is time to update the display

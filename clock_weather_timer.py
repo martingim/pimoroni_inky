@@ -48,7 +48,7 @@ temp_font = ImageFont.truetype(SEG_file, int(fontsize*0.5))
 p_font = ImageFont.truetype(SEG_file, int(fontsize*0.25))
 uv_font = ImageFont.truetype(icons_file, int(fontsize*0.5))
 
-def inky_txt(currtime, temperature, p_min, p_max, icon, uv_symbol, display):
+def inky_txt(currtime, temperature, precipitation, icon, uv_symbol, display):
         img = Image.new("P", (display.WIDTH, display.HEIGHT),100)
         img.paste(display.BLACK, (0,0,img.size[0],img.size[1]))
         draw = ImageDraw.Draw(img)
@@ -71,10 +71,9 @@ def inky_txt(currtime, temperature, p_min, p_max, icon, uv_symbol, display):
         y = display.HEIGHT-(h+6)
         draw.text((x,y), temperature, display.WHITE, temp_font)
         
-        precipitation = f"{p_min:.1f}-{p_max:.1f}"
         tmp, tmp, w, h = p_font.getbbox(precipitation)
         y = display.HEIGHT-(h+6)
-        x = 180    
+        x = 160    
         draw.text((x,y), precipitation, display.WHITE, p_font)
         
         tmp, tmp, w, h = uv_font.getbbox(uv_symbol)
@@ -125,7 +124,11 @@ while True:
         precipitation_min += interval.variables["precipitation_amount_min"].value
         precipitation_max += interval.variables["precipitation_amount_max"].value
         uv_max = max(uv_max, interval.variables["ultraviolet_index_clear_sky"].value)    
-
+    if precipitation_max > 0:
+        precipitation = f"{p_min:.1f}-{p_max:.1f}"
+    else:
+        precipitation = ""
+        
     if uv_max > 2.9:
         uv_symbol = '1'
     else:
@@ -137,6 +140,6 @@ while True:
         icon = ':'        
     currtime = strftime("%H:%M", localtime())
     if currtime!=old_time:
-        inky_txt(currtime,temperature, precipitation_min, precipitation_max, icon, uv_symbol, inky_display)
+        inky_txt(currtime,temperature, precipitation, icon, uv_symbol, inky_display)
     sleep(10)
     old_time=currtime

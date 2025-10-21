@@ -134,10 +134,9 @@ try:
 except:
     home_forecast.update()
 
-
+old_time = ''
 def weather_report():
     icon = 0
-    old_time = ''
     temperature = ''
 
     

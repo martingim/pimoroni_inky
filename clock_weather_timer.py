@@ -134,8 +134,7 @@ try:
 except:
     home_forecast.update()
 
-global old_time = ''
-def weather_report():
+def weather_report(old_time):
     icon = 0
     temperature = ''
 
@@ -179,6 +178,7 @@ def weather_report():
     if currtime!=old_time:
         inky_txt(currtime,temperature, precipitation, icon, uv_symbol, inky_display)
     old_time=currtime
+    return old_time
 
 
 ################# work timer ###########################
@@ -214,8 +214,9 @@ def run_timer():
                                         newtime = strftime("%H:%M", gmtime(remaining_time))
                                         break
                                 if Paused:
+                                    old_time = ''
                                     while Paused:
-                                        weather_report()
+                                        old_time = weather_report(old_time)
                                         sleep(1)
                                         
                                     endtime = remaining_time + time()

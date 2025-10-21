@@ -88,7 +88,7 @@ def inky_txt(currtime, temperature, precipitation, icon, uv_symbol, display):
         x = 350
         draw.text((x,y), uv_symbol, display.WHITE, uv_font)
 
-        if remaining_time>0:
+        if remaining_time>59:
             msg = strftime("%H:%M", gmtime(remaining_time))
             tmp, tmp, w, h = rem_time_font.getbbox(msg)
             y = 6

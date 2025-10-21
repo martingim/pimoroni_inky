@@ -268,7 +268,6 @@ def add_10_min():
         work_time += 10*60
         remaining_time += 10*60
         endtime += 10*60
-        weather_report('')
         print("added 10 min")
 
 def sub_10_min():
@@ -278,7 +277,6 @@ def sub_10_min():
         work_time -= min(10*60, remaining_time)
         endtime -= min(10*60, remaining_time)    
         remaining_time -= min(10*60, remaining_time)
-        weather_report('')
         print("sub 10 min")
 
 def wait_for_input():

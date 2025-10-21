@@ -70,7 +70,7 @@ def inky_txt(currtime, temperature, p_min, p_max, icon, display):
         y = display.HEIGHT-(h+6)
         draw.text((x,y), temperature, display.WHITE, temp_font)
         x = 200
-        draw.text((x,y), f"{p_min}-{p_max}", display.WHITE, p_font)
+        draw.text((x,y), f"{p_min:.1f}-{p_max:.1f}", display.WHITE, p_font)
         
         
         display.set_image(img)

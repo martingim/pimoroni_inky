@@ -125,7 +125,7 @@ while True:
         precipitation_max += interval.variables["precipitation_amount_max"].value
         uv_max = max(uv_max, interval.variables["ultraviolet_index_clear_sky"].value)    
     if precipitation_max > 0:
-        precipitation = f"{p_min:.1f}-{p_max:.1f}"
+        precipitation = f"{precipitation_min:.1f}-{precipitation_max:.1f}"
     else:
         precipitation = ""
         

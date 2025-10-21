@@ -241,7 +241,6 @@ def run_timer():
                             old_time = weather_report(old_time)
                             sleep(1)
                         
-                        break
                                     
                     
                 # message = strftime("%H:%M", gmtime(0))

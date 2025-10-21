@@ -140,46 +140,46 @@ def weather_report():
     old_time = ''
     temperature = ''
 
-    while True:
-        if utc.localize(home_forecast.data.expires)<datetime.now(timezone.utc):
-            print("expired, updating forecast")
-            home_forecast.update()
-        
-        interval = home_forecast.data.intervals[0]
-        variables = interval.variables
-        t = variables["air_temperature"].value
-        temperature = f"{t}\u00b0"
-        data = json.loads(home_forecast.json_string)
-        symbol_code = data['data']['properties']['timeseries'][0]['data']['next_6_hours']['summary']['symbol_code']
+    
+    if utc.localize(home_forecast.data.expires)<datetime.now(timezone.utc):
+        print("expired, updating forecast")
+        home_forecast.update()
+    
+    interval = home_forecast.data.intervals[0]
+    variables = interval.variables
+    t = variables["air_temperature"].value
+    temperature = f"{t}\u00b0"
+    data = json.loads(home_forecast.json_string)
+    symbol_code = data['data']['properties']['timeseries'][0]['data']['next_6_hours']['summary']['symbol_code']
 
-        #precipitation and uv next 6 hours
-        now = datetime.today()
-        now_plus_6_hours = now + timedelta(hours=6)
-        precipitation_min = 0
-        precipitation_max = 0
-        uv_max = 0
-        for interval in home_forecast.data.intervals_between(now, now_plus_6_hours):
-            precipitation_min += interval.variables["precipitation_amount_min"].value
-            precipitation_max += interval.variables["precipitation_amount_max"].value
-            uv_max = max(uv_max, interval.variables["ultraviolet_index_clear_sky"].value)    
-        if precipitation_max > 0:
-            precipitation = f"{precipitation_min:.1f}-{precipitation_max:.1f}"
-        else:
-            precipitation = ""
-            
-        if uv_max > 2.9:
-            uv_symbol = '1'
-        else:
-            uv_symbol = ':'
-            
-        try:
-            icon = icon_dict[symbol_code]
-        except:
-            icon = ':'        
-        currtime = strftime("%H:%M", localtime())
-        if currtime!=old_time:
-            inky_txt(currtime,temperature, precipitation, icon, uv_symbol, inky_display)
-        old_time=currtime
+    #precipitation and uv next 6 hours
+    now = datetime.today()
+    now_plus_6_hours = now + timedelta(hours=6)
+    precipitation_min = 0
+    precipitation_max = 0
+    uv_max = 0
+    for interval in home_forecast.data.intervals_between(now, now_plus_6_hours):
+        precipitation_min += interval.variables["precipitation_amount_min"].value
+        precipitation_max += interval.variables["precipitation_amount_max"].value
+        uv_max = max(uv_max, interval.variables["ultraviolet_index_clear_sky"].value)    
+    if precipitation_max > 0:
+        precipitation = f"{precipitation_min:.1f}-{precipitation_max:.1f}"
+    else:
+        precipitation = ""
+        
+    if uv_max > 2.9:
+        uv_symbol = '1'
+    else:
+        uv_symbol = ':'
+        
+    try:
+        icon = icon_dict[symbol_code]
+    except:
+        icon = ':'        
+    currtime = strftime("%H:%M", localtime())
+    if currtime!=old_time:
+        inky_txt(currtime,temperature, precipitation, icon, uv_symbol, inky_display)
+    old_time=currtime
 
 
 ################# work timer ###########################
